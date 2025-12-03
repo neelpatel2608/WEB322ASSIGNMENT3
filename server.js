@@ -78,7 +78,11 @@ app.get("/", (req, res) => {
 });
 
 // -------------------- Start Server -------------------- //
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running at http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
