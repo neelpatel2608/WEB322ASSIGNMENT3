@@ -13,7 +13,7 @@ const taskRoutes = require("../routes/tasks");
 
 const app = express();
 
-// handlebars
+// ---------------- HANDLEBARS ----------------
 app.engine(
   "handlebars",
   exphbs.engine({
@@ -26,13 +26,13 @@ app.engine(
 app.set("view engine", "handlebars");
 app.set("views", __dirname + "/../views");
 
-// static folder
+// ---------------- STATIC FOLDER ----------------
 app.use(express.static(__dirname + "/../public"));
 
-// body parser
+// ---------------- BODY PARSER ----------------
 app.use(express.urlencoded({ extended: true }));
 
-// session middleware
+// ---------------- SESSIONS ----------------
 app.use(
   session({
     cookieName: "session",
@@ -42,27 +42,35 @@ app.use(
   })
 );
 
-// attach session globally
 app.use((req, res, next) => {
   res.locals.session = req.session;
   next();
 });
 
-// connect databases on cold start
-(async () => {
-  await connectMongo();
-  await initPostgres();
-})();
+// ---------------- CONNECT DATABASES ONCE ----------------
+let initialized = false;
 
-// load routes
+async function initDatabases() {
+  if (!initialized) {
+    console.log("Initializing Mongo + Postgres (ONE TIME ONLY)...");
+    await connectMongo();
+    await initPostgres();
+    initialized = true;
+  }
+}
+
+// Call once on first invocation
+initDatabases();
+
+// ---------------- ROUTES ----------------
 app.use("/", authRoutes);
 app.use("/", taskRoutes);
 
-// default route
+// ---------------- DEFAULT ROUTE ----------------
 app.get("/", (req, res) => {
   if (req.session.user) return res.redirect("/dashboard");
   res.redirect("/login");
 });
 
-// EXPORT as Vercel serverless function
+// ---------------- EXPORT FOR VERCEL ----------------
 module.exports = serverless(app);
