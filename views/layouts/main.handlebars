@@ -1,0 +1,28 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>WEB322 - Assignment 3</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+    <nav class="navbar">
+        {{#if session.user}}
+        <a href="/dashboard">Dashboard</a>
+        <a href="/tasks">Tasks</a>
+        <a href="/logout">Logout</a>
+        {{else}}
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+        {{/if}}
+    </nav>
+
+    <div class="container">
+        {{{ body }}}
+    </div>
+
+</body>
+</html>

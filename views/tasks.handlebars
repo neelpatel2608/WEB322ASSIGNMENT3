@@ -1,0 +1,41 @@
+<h2>Your Tasks</h2>
+
+<a href="/tasks/add" class="btn btn-primary mb-3">Add Task</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Due Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{#each tasks}}
+        <tr>
+            <td>{{this.title}}</td>
+            <td>{{this.status}}</td>
+            <td>
+                {{#if this.dueDate}}
+                {{this.dueDate}}
+                {{else}}
+                No Due Date
+                {{/if}}
+            </td>
+            <td>
+                <form action="/tasks/status/{{this.id}}" method="POST" style="display:inline;">
+                    <button class="btn btn-secondary btn-sm">Toggle</button>
+                </form>
+
+                <a href="/tasks/edit/{{this.id}}" class="btn btn-success btn-sm">Edit</a>
+
+                <form action="/tasks/delete/{{this.id}}" method="POST" style="display:inline;">
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
